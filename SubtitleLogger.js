@@ -13,12 +13,18 @@ constructor() {
     this.lastLoggedText = "";
     
     let subtitleDiv = null;
+    let subtitleContainer = document.body; // default
     
     if(window.location.host == "wetv.vip") // wetv.vip/en player
+    {
         subtitleDiv = document.querySelector('.text-track');
+        subtitleContainer = document.getElementById('internal-player-wrapper');
+    }
     /*TODO: else 
     if(window.location.host == "www.youku.tv") // wetv.vip/en player
+    {
         subtitleDiv = document.querySelector('.text-track');
+    }
     else 
     if(window.location.host == "www.viki.com") // wetv.vip/en player
         subtitleDiv = document.querySelector('.text-track');
@@ -36,7 +42,7 @@ constructor() {
         // Create the log container
         logContainer = document.createElement('div');
         logContainer.id = 'subtitle-log';
-        document.body.appendChild(logContainer);
+        subtitleContainer.appendChild(logContainer);
 
         // 2. APPLY THE NEW STYLES for absolute positioning and transparency
         logContainer.style.position = 'fixed'; // 'fixed' is best for corner placement, ensuring it stays visible when scrolling

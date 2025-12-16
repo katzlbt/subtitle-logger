@@ -6,7 +6,7 @@ Log subtitles on a web stream-player to read them slowly at your own pace, espec
 
    1. Open the JS developer console of your web-wrowser when watching a series on wetv.vip/en/play
    2. Paste the whole file in the console-tab and hit enter.
-   3. The log should appear on the bottom left (does not work in full-screen mode yet)
+   3. The log should appear on the bottom left
    4. You can close the developer section
 
 # Supported Players
