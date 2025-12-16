@@ -6,14 +6,26 @@
    2. Paste the whole file in the console and hit enter.
 */
 
-let SubtitleLogger_lastLoggedText = ""; // avoid duplicate lines of text (double events)
-
-function setupSubtitleLogger() {
+class SubtitleLogger
+{ 
+constructor() {
     
-    // wetv.vip/en player
-    const subtitleDiv = document.querySelector('.text-track');
+    this.lastLoggedText = "";
+    
+    let subtitleDiv = null;
+    
+    if(window.location.host == "wetv.vip") // wetv.vip/en player
+        subtitleDiv = document.querySelector('.text-track');
+    /*TODO: else 
+    if(window.location.host == "www.youku.tv") // wetv.vip/en player
+        subtitleDiv = document.querySelector('.text-track');
+    else 
+    if(window.location.host == "www.viki.com") // wetv.vip/en player
+        subtitleDiv = document.querySelector('.text-track');
+    */
+    
     if (!subtitleDiv) {
-        console.error('The target subtitle element with class "text-track" was not found.');
+        console.error('The target subtitle element was not found.');
         return;
     }
 
@@ -49,6 +61,7 @@ function setupSubtitleLogger() {
     }
         
     // 4. Define the callback function that runs on every detected change
+    var me = this;
     const callback = function(mutationsList, observer) {
         for (const mutation of mutationsList) {
             // Check if the text content changed (characterData) or structure changed (childList)
@@ -58,7 +71,7 @@ function setupSubtitleLogger() {
                 // Use innerText to get formatted text while ignoring hidden elements
                 const newText = subtitleDiv.textContent.trim();
                 
-                if (newText && newText != SubtitleLogger_lastLoggedText) {
+                if (newText && newText != me.lastLoggedText) {
                     //const now = (new Date().toLocaleTimeString()).substring(0,4);
                     const logEntry = document.createElement('p');
                     logEntry.style.margin = '0'; // Tidy up spacing
@@ -69,10 +82,17 @@ function setupSubtitleLogger() {
                     // Add the new entry to the log container
                     logContainer.appendChild(logEntry);
                     
-                    SubtitleLogger_lastLoggedText = newText;
+                    // prevent all duplicates
+                    me.lastLoggedText = newText;
                     
-                    // Optional: Scroll to the bottom of the log
-                    logContainer.scrollTop = logContainer.scrollHeight;
+                    // Check if the count exceeds the limit
+                    if (logContainer.children.length > 30) {
+                        // Remove the oldest child
+                        logContainer.removeChild(logContainer.firstChild);
+                    }
+                    
+                    // Scroll to the bottom of the log
+                    logContainer.scrollTop = logContainer.scrollHeight;               
                 }
             }
         }
@@ -91,6 +111,7 @@ function setupSubtitleLogger() {
 
     console.log('Subtitle logging successfully set up in the bottom-left corner.');
 }
+} // class SubtitleLogger
 
 // Ensure the function runs after the document is fully loaded
-setupSubtitleLogger();
+new SubtitleLogger();
