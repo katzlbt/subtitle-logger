@@ -10,6 +10,8 @@ class SubtitleLogger
 { 
 constructor() {
     
+    // this.observer;
+    // this.logContainer
     this.lastLoggedText = "";
     
     let subtitleDiv = null;
@@ -20,12 +22,13 @@ constructor() {
         subtitleDiv = document.querySelector('.text-track');
         subtitleContainer = document.getElementById('internal-player-wrapper');
     }
-    /*TODO: else 
+    else 
     if(window.location.host == "www.youku.tv") // wetv.vip/en player
     {
-        subtitleDiv = document.querySelector('.text-track');
+        subtitleDiv = document.getElementById('subtitle');
+        subtitleContainer = document.querySelector('.play-top-container-new');
     }
-    else 
+    /*TODO: else 
     if(window.location.host == "www.viki.com") // wetv.vip/en player
         subtitleDiv = document.querySelector('.text-track');
     */
@@ -53,10 +56,10 @@ constructor() {
         logContainer.style.maxWidth = '300px'; // Limit width so it doesn't cover the screen
         logContainer.style.maxHeight = '400px'; // Limit height for scrolling log
         logContainer.style.overflowY = 'scroll'; // Enable scrolling for long logs
-        logContainer.style.pointerEvents = 'none'; // Makes it click-through, so it doesn't interfere with player controls
+        //logContainer.style.pointerEvents = 'none'; // Makes it click-through, so it doesn't interfere with player controls
 
         // 3. SET THE DESIRED CORNER (e.g., Bottom Left)
-        logContainer.style.bottom = '20px'; // 20px margin from the bottom edge
+        logContainer.style.bottom = '110px'; // past player controls from the bottom edge
         logContainer.style.left = '20px';   // 20px margin from the left edge
         
         // If you wanted Top Left, you would use:
@@ -64,6 +67,8 @@ constructor() {
         // logContainer.style.left = '20px';
         
         logContainer.innerHTML = '<h4>Subtitle Log (Live)</h4>';
+        
+        this.logContainer = logContainer;
     }
         
     // 4. Define the callback function that runs on every detected change
@@ -92,7 +97,7 @@ constructor() {
                     me.lastLoggedText = newText;
                     
                     // Check if the count exceeds the limit
-                    if (logContainer.children.length > 30) {
+                    if (logContainer.children.length > 90) {
                         // Remove the oldest child
                         logContainer.removeChild(logContainer.firstChild);
                     }
@@ -112,12 +117,19 @@ constructor() {
     };
 
     // 6. Create and start the observer
-    const observer = new MutationObserver(callback);
-    observer.observe(subtitleDiv, config);
+    this.observer = new MutationObserver(callback);
+    this.observer.observe(subtitleDiv, config);
 
     console.log('Subtitle logging successfully set up in the bottom-left corner.');
 }
+
+remove()
+{
+    this.observer.disconnect();
+    this.logContainer.remove();
+}
+
 } // class SubtitleLogger
 
 // Ensure the function runs after the document is fully loaded
-new SubtitleLogger();
+let subtitleLogger = new SubtitleLogger();

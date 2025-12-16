@@ -1,6 +1,6 @@
 # subtitle-logger
 
-Log subtitles on a web stream-player to read them slowly at your own pace, especially if they appear too short to read. Currently this works only for the WeTV player at wetv.vip, but I will add youku and viki if that is possible later.
+Log subtitles on a web stream-player to read them slowly at your own pace, especially if they appear too short to read. Currently this works only for the WeTV and Youku player, but I will add viki and crunchy if that is possible later.
 
 ![](/doc/screenshot.png)
 
@@ -14,5 +14,6 @@ Log subtitles on a web stream-player to read them slowly at your own pace, espec
 # Supported Players
     
     - wetv.vip/en/play (tested in Chrome 2025-12)
+    - www.youku.tv/v (tested in Chrome 2025-12)
     
 Currently this only works on wetv stream player until they change how it works.
