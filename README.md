@@ -2,6 +2,8 @@
 
 Log subtitles on a web stream-player to read them slowly at your own pace, especially if they appear too short to read. Currently this works only for the WeTV player at wetv.vip, but I will add youku and viki if that is possible later.
 
+![](/doc/screenshot.png)
+
 # Usage
 
    1. Open the JS developer console of your web-wrowser when watching a series on wetv.vip/en/play
