@@ -21,36 +21,40 @@
 class SubtitleLogger
 { 
 constructor()
-    {    
+    {
         // this.observer;
-        // this.logContainer
+        this.logContainer = null;
         this.lastLoggedText = "";
         
-        let subtitleDiv = null;
-        let subtitleContainer = document.body; // default
+        this.subtitleDiv = null;
+        this.subtitleContainer = document.body; // default
         
         let bottomMargin = '110px';
         
         if(window.location.host == "wetv.vip") // wetv.vip/en player
         {
-            subtitleDiv = document.querySelector('.text-track');
-            subtitleContainer = document.getElementById('internal-player-wrapper');
+            this.subtitleDiv = document.querySelector('.text-track');
+            this.subtitleContainer = document.getElementById('internal-player-wrapper');
         }
         else 
         if(window.location.host == "www.youku.tv")
         {
-            subtitleDiv = document.getElementById('subtitle');
-            subtitleContainer = document.querySelector('.play-top-container-new');
+            this.subtitleDiv = document.getElementById('subtitle');
+            this.subtitleContainer = document.querySelector('.play-top-container-new');
         }
         else 
         if(window.location.host == "www.viki.com")
         {
-            subtitleDiv = document.querySelector('.vjs-text-track-display');
-            subtitleContainer = document.getElementById('vmplayer_id');
+            this.subtitleDiv = document.querySelector('.vjs-text-track-display');
+            this.subtitleContainer = document.getElementById('vmplayer_id');
+            //subtitleContainer = document.querySelector('.video-player');
             bottomMargin = '160px';
+            this.watchViki();
         }
+        else
+            alert('The website did not match: ' + window.location.host);
         
-        if (!subtitleDiv) {
+        if (!this.subtitleDiv) {
             console.error('The target subtitle element was not found.');
             return;
         }
@@ -62,7 +66,7 @@ constructor()
             // Create the log container
             logContainer = document.createElement('div');
             logContainer.id = 'subtitle-log';
-            subtitleContainer.appendChild(logContainer);
+            this.subtitleContainer.appendChild(logContainer);
     
             // 2. APPLY THE NEW STYLES for absolute positioning and transparency
             logContainer.style.position = 'fixed'; // 'fixed' is best for corner placement, ensuring it stays visible when scrolling
@@ -87,7 +91,12 @@ constructor()
             
             this.logContainer = logContainer;
         }
-            
+        
+        this.createObserver();
+    }
+    
+createObserver()
+    {
         // 4. Define the callback function that runs on every detected change
         var me = this;
         const callback = function(mutationsList, observer) {
@@ -97,7 +106,7 @@ constructor()
                     
                     // Get the current text content from the subtitle div
                     // Use innerText to get formatted text while ignoring hidden elements
-                    const newText = subtitleDiv.textContent.trim();
+                    const newText = me.subtitleDiv.textContent.trim();
                     
                     if (newText && newText != me.lastLoggedText) {
                         //const now = (new Date().toLocaleTimeString()).substring(0,4);
@@ -108,26 +117,26 @@ constructor()
                         //logEntry.textContent = `${now}: ${newText}`;
                         
                         // Add the new entry to the log container
-                        logContainer.appendChild(logEntry);
+                        me.logContainer.appendChild(logEntry);
                         
                         // prevent all duplicates
                         me.lastLoggedText = newText;
                         
                         // Check if the count exceeds the limit
-                        if (logContainer.children.length > 90) {
+                        if (me.logContainer.children.length > 90) {
                             // Remove the oldest child
-                            logContainer.removeChild(logContainer.firstChild);
+                            me.logContainer.removeChild(me.logContainer.firstChild);
                         }
                         
                         // Scroll to the bottom of the log
-                        logContainer.scrollTop = logContainer.scrollHeight;               
+                        me.logContainer.scrollTop = me.logContainer.scrollHeight;               
                     }
                 }
             }
         };
     
         // 5. Define the configuration for the observer
-        const config = { 
+        const config = {
             characterData: true,
             subtree: true,
             childList: true,
@@ -135,11 +144,26 @@ constructor()
     
         // 6. Create and start the observer
         this.observer = new MutationObserver(callback);
-        this.observer.observe(subtitleDiv, config);
+        this.observer.observe(this.subtitleDiv, config);
     
         console.log('Subtitle logging successfully set up in the bottom-left corner.');
     }
 
+watchViki() // viki removes our container each episode!
+    {
+        if(this.logContainer && this.logContainer.parentNode.parentNode == null)
+        {
+            var subtitleContainer = document.getElementById('vmplayer_id');
+            if(subtitleContainer)
+            {
+                subtitleContainer.appendChild(this.logContainer);
+                this.createObserver();
+            }
+        }
+        
+        setTimeout( ()=>{ this.watchViki() }, 10000);
+    }
+    
 remove()
     {
         this.observer.disconnect();
@@ -148,4 +172,4 @@ remove()
 } // class SubtitleLogger
 
 // Ensure the function runs after the document is fully loaded
-let subtitleLogger = new SubtitleLogger();
+setTimeout(function(){ window.subtitleLogger = new SubtitleLogger(); },5000);
