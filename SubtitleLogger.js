@@ -1,10 +1,7 @@
 /* jEdit :folding=indent: :collapseFolds=1: :noTabs=true:
 
-   SubtitleLogger for WeTV, Youku.
-   MIT License. Created with help from gGoogle Gemini. 
-   
-   1. Open the developer console when watching a series
-   2. Paste the whole file in the console and hit enter.
+   SubtitleLogger for WeTV, Youku, Viki.
+   MIT License. Created with help from Google Gemini. 
 */
 
 class SubtitleLogger
