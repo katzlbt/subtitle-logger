@@ -1,5 +1,6 @@
-/*
-   SubtitleLogger for WeTV by Tencent.
+/* jEdit :folding=indent: :collapseFolds=1: :noTabs=true:
+
+   SubtitleLogger for WeTV, Youku.
    MIT License. Created with help from gGoogle Gemini. 
    
    1. Open the developer console when watching a series
@@ -17,21 +18,26 @@ constructor() {
     let subtitleDiv = null;
     let subtitleContainer = document.body; // default
     
+    let bottomMargin = '110px';
+    
     if(window.location.host == "wetv.vip") // wetv.vip/en player
     {
         subtitleDiv = document.querySelector('.text-track');
         subtitleContainer = document.getElementById('internal-player-wrapper');
     }
     else 
-    if(window.location.host == "www.youku.tv") // wetv.vip/en player
+    if(window.location.host == "www.youku.tv")
     {
         subtitleDiv = document.getElementById('subtitle');
         subtitleContainer = document.querySelector('.play-top-container-new');
     }
-    /*TODO: else 
-    if(window.location.host == "www.viki.com") // wetv.vip/en player
-        subtitleDiv = document.querySelector('.text-track');
-    */
+    else 
+    if(window.location.host == "www.viki.com")
+    {
+        subtitleDiv = document.querySelector('.vjs-text-track-display');
+        subtitleContainer = document.getElementById('vmplayer_id');
+        bottomMargin = '160px';
+    }
     
     if (!subtitleDiv) {
         console.error('The target subtitle element was not found.');
@@ -59,7 +65,7 @@ constructor() {
         //logContainer.style.pointerEvents = 'none'; // Makes it click-through, so it doesn't interfere with player controls
 
         // 3. SET THE DESIRED CORNER (e.g., Bottom Left)
-        logContainer.style.bottom = '110px'; // past player controls from the bottom edge
+        logContainer.style.bottom = bottomMargin; // past player controls from the bottom edge
         logContainer.style.left = '20px';   // 20px margin from the left edge
         
         // If you wanted Top Left, you would use:
@@ -124,11 +130,10 @@ constructor() {
 }
 
 remove()
-{
-    this.observer.disconnect();
-    this.logContainer.remove();
-}
-
+    {
+        this.observer.disconnect();
+        this.logContainer.remove();
+    }
 } // class SubtitleLogger
 
 // Ensure the function runs after the document is fully loaded
