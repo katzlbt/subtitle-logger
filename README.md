@@ -1,6 +1,6 @@
 # Subtitle Logger
 
-Log subtitles on a web stream-player to read them slowly at your own pace, especially if they appear too short to read. Currently this works for the WeTV, Viki and Youku player. As this is a hack the setup is fragile and may break when the player HTML is changed.
+Log subtitles on a web stream-player to read them slowly at your own pace, especially if they appear too short to read. Currently this works for the WeTV, Viki and Youku player. As this is a hack, the setup is fragile and may break when the player HTML is changed.
 
 ![](/doc/screenshot.png)
 
@@ -13,9 +13,14 @@ Log subtitles on a web stream-player to read them slowly at your own pace, espec
 
    ![](/doc/screenshot2.png)
 
+# Tampermonkey
+
+Install Tampermonkey browser extension and add the URL:
+
+    https://raw.githubusercontent.com/katzlbt/subtitle-logger/main/SubtitleLogger.js
+
 # Supported Players
     
     - wetv.vip/en/play (tested in Chrome 2025-12)
     - www.youku.tv/v (tested in Chrome 2025-12)
-    - www.viki.com (tested in Chrome 2025-12)
-    
+    - www.viki.com (tested in Chrome 2025-12), page reloads after each episode :-(

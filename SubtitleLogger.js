@@ -4,10 +4,24 @@
    MIT License. Created with help from Google Gemini. 
 */
 
+// ==UserScript==
+// @name         Subtitle Logger
+// @namespace    http://deine-webseite.de/
+// @version      0.9
+// @description  Log subtitles on a web stream-player to read them slowly at your own pace, especially if they appear too short to read. Currently this works for the WeTV, Viki and Youku player.
+// @author       Cat of all Trades
+// @match        https://wetv.vip/en/play/*
+// @match        https://www.youku.tv/v/*
+// @match        https://www.viki.com/videos/*
+// @updateURL    https://raw.githubusercontent.com/katzlbt/subtitle-logger/main/SubtitleLogger.js
+// @downloadURL  https://raw.githubusercontent.com/katzlbt/subtitle-logger/main/SubtitleLogger.js
+// @grant        none
+// ==/UserScript==
+
 class SubtitleLogger
 { 
-    constructor() {
-        
+constructor()
+    {    
         // this.observer;
         // this.logContainer
         this.lastLoggedText = "";
@@ -63,7 +77,7 @@ class SubtitleLogger
     
             // 3. SET THE DESIRED CORNER (e.g., Bottom Left)
             logContainer.style.bottom = bottomMargin; // past player controls from the bottom edge
-            logContainer.style.left = '20px';   // 20px margin from the left edge
+            logContainer.style.left = '4px';   // margin from the left edge
             
             // If you wanted Top Left, you would use:
             // logContainer.style.top = '20px';
