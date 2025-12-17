@@ -15,9 +15,7 @@ Log subtitles on a web stream-player to read them slowly at your own pace, espec
 
 # Tampermonkey
 
-Install Tampermonkey browser extension and add the URL:
-
-    https://raw.githubusercontent.com/katzlbt/subtitle-logger/main/SubtitleLogger.js
+Currently does not start with tampermonkey ... I have no clue why, hints are welcome.
 
 # Supported Players
     
