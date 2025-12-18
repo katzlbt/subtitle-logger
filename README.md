@@ -17,6 +17,9 @@ Log subtitles on a web stream-player to read them slowly at your own pace, espec
 
 Seems to work with Tampermonkey now. It should be able to automatically activate on supported sites. Installing Tampermonkey is not trivial and needs 2 special permission sliders set to ON (developer-mode and user-scripts).
 
+BUG: Tampermonkey 5.4.1 only activates the script for the first @match
+https://github.com/Tampermonkey/tampermonkey/issues/2629
+
 # Supported Players
     
     - wetv.vip/en/play (tested in Chrome 2025-12)
