@@ -15,10 +15,10 @@ Log subtitles on a web stream-player to read them slowly at your own pace, espec
 
 # Tampermonkey
 
-Currently does not start with tampermonkey ... I have no clue why, hints are welcome.
+Seems to work with Tampermonkey now. It should be able to automatically activate on supported sites. Installing Tampermonkey is not trivial and needs 2 special permission sliders set to ON (developer-mode and user-scripts).
 
 # Supported Players
     
     - wetv.vip/en/play (tested in Chrome 2025-12)
     - www.youku.tv/v (tested in Chrome 2025-12)
-    - www.viki.com (tested in Chrome 2025-12), page reloads after each episode :-(
+    - www.viki.com (tested in Chrome 2025-12)

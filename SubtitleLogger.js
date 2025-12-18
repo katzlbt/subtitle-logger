@@ -6,13 +6,13 @@
 
 // ==UserScript==
 // @name         Subtitle Logger
-// @namespace    http://deine-webseite.de/
-// @version      0.9
+// @namespace    http://schlaraffenland.de/
+// @version      1.0
 // @description  Log subtitles on a web stream-player to read them slowly at your own pace, especially if they appear too short to read. Currently this works for the WeTV, Viki and Youku player.
 // @author       Cat of all Trades
+// @match        https://www.viki.com/videos/*
 // @match        https://wetv.vip/en/play/*
 // @match        https://www.youku.tv/v/*
-// @match        https://www.viki.com/videos/*
 // @updateURL    https://raw.githubusercontent.com/katzlbt/subtitle-logger/main/SubtitleLogger.js
 // @downloadURL  https://raw.githubusercontent.com/katzlbt/subtitle-logger/main/SubtitleLogger.js
 // @grant        none
@@ -22,37 +22,50 @@ class SubtitleLogger
 { 
 constructor()
     {
-        // this.observer;
+        this.observer = null;
         this.logContainer = null;
         this.lastLoggedText = "";
         
         this.subtitleDiv = null;
         this.subtitleContainer = document.body; // default
         
+        this.updateContainers = function(){};
+        
         let bottomMargin = '110px';
         
         if(window.location.host == "wetv.vip") // wetv.vip/en player
         {
-            this.subtitleDiv = document.querySelector('.text-track');
-            this.subtitleContainer = document.getElementById('internal-player-wrapper');
+            this.updateContainers = () =>
+            {
+                this.subtitleDiv = document.querySelector('.text-track');
+                this.subtitleContainer = document.getElementById('internal-player-wrapper');
+            }
         }
         else 
         if(window.location.host == "www.youku.tv")
         {
-            this.subtitleDiv = document.getElementById('subtitle');
-            this.subtitleContainer = document.querySelector('.play-top-container-new');
+            this.updateContainers = () =>
+            {
+                this.subtitleDiv = document.getElementById('subtitle');
+                this.subtitleContainer = document.querySelector('.play-top-container-new');
+            }
         }
         else 
         if(window.location.host == "www.viki.com")
         {
-            this.subtitleDiv = document.querySelector('.vjs-text-track-display');
-            this.subtitleContainer = document.getElementById('vmplayer_id');
-            //subtitleContainer = document.querySelector('.video-player');
+            this.updateContainers = () =>
+            {
+                this.subtitleDiv = document.querySelector('.vjs-text-track-display');
+                this.subtitleContainer = document.getElementById('vmplayer_id');
+                //subtitleContainer = document.querySelector('.video-player');
+            }
             bottomMargin = '160px';
             this.watchViki();
         }
         else
             alert('The website did not match: ' + window.location.host);
+        
+        this.updateContainers();
         
         if (!this.subtitleDiv) {
             console.error('The target subtitle element was not found.');
@@ -97,6 +110,12 @@ constructor()
     
 createObserver()
     {
+        if(this.observer)
+            this.observer.disconnect();
+        
+        this.updateContainers();
+        this.subtitleContainer.appendChild(this.logContainer);
+        
         // 4. Define the callback function that runs on every detected change
         var me = this;
         const callback = function(mutationsList, observer) {
@@ -129,7 +148,7 @@ createObserver()
                         }
                         
                         // Scroll to the bottom of the log
-                        me.logContainer.scrollTop = me.logContainer.scrollHeight;               
+                        me.logContainer.scrollTop = me.logContainer.scrollHeight;
                     }
                 }
             }
@@ -143,7 +162,9 @@ createObserver()
         };
     
         // 6. Create and start the observer
-        this.observer = new MutationObserver(callback);
+        if(null == this.observer)
+            this.observer = new MutationObserver(callback);
+        
         this.observer.observe(this.subtitleDiv, config);
     
         console.log('Subtitle logging successfully set up in the bottom-left corner.');
@@ -156,7 +177,6 @@ watchViki() // viki removes our container each episode!
             var subtitleContainer = document.getElementById('vmplayer_id');
             if(subtitleContainer)
             {
-                subtitleContainer.appendChild(this.logContainer);
                 this.createObserver();
             }
         }
@@ -172,4 +192,4 @@ remove()
 } // class SubtitleLogger
 
 // Ensure the function runs after the document is fully loaded
-setTimeout(function(){ window.subtitleLogger = new SubtitleLogger(); },5000);
+setTimeout(function(){ window.subtitleLogger = new SubtitleLogger(); },10000);
