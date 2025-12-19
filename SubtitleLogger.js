@@ -7,7 +7,7 @@
 // ==UserScript==
 // @name         Subtitle Logger
 // @namespace    http://schlaraffenland.de/
-// @version      1.0
+// @version      1.01
 // @description  Log subtitles on a web stream-player to read them slowly at your own pace, especially if they appear too short to read. Currently this works for the WeTV, Viki and Youku player.
 // @author       Cat of all Trades
 // @match        https://www.viki.com/videos/*
@@ -103,7 +103,13 @@ constructor()
             logContainer.innerHTML = '<h4>Subtitle Log (Live)</h4>';
             
             this.logContainer = logContainer;
+            
+            // hide the scrollbar
+            const style = document.createElement('style');
+            style.innerHTML = "#subtitle-log::-webkit-scrollbar { display: none; }";
+            document.head.appendChild(style);
         }
+        
         
         this.createObserver();
     }
