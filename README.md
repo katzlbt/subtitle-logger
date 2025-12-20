@@ -17,8 +17,7 @@ Log subtitles on a web stream-player to read them slowly at your own pace, espec
 
 Seems to work with Tampermonkey now. It should be able to automatically activate on supported sites. Installing Tampermonkey is not trivial and needs 2 special permission sliders set to ON (developer-mode and user-scripts).
 
-BUG: Tampermonkey 5.4.1 does not reliably activate the script for all sites:
-https://github.com/Tampermonkey/tampermonkey/issues/2629
+BUG: Tampermonkey 5.4.1 does not reliably activate the script when navigating indirectly to a video on viki.om or youku.tv. You must reload the video-player page to activate the script if it fails. More details here: https://github.com/Tampermonkey/tampermonkey/issues/2629
 
 # Supported Players
     
