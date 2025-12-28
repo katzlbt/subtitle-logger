@@ -1,13 +1,13 @@
 /* jEdit :folding=indent: :collapseFolds=1: :noTabs=true:
 
    SubtitleLogger for WeTV, Youku, Viki.
-   MIT License. Created with help from Google Gemini. 
+   MIT License. Created with help from Google Gemini.
 */
 
 // ==UserScript==
 // @name         Subtitle Logger
 // @namespace    http://schlaraffenland.de/
-// @version      1.01
+// @version      1.1
 // @description  Log subtitles on a web stream-player to read them slowly at your own pace, especially if they appear too short to read. Currently this works for the WeTV, Viki and Youku player.
 // @author       Cat of all Trades
 // @match        https://www.viki.com/videos/*
@@ -15,11 +15,13 @@
 // @match        https://www.youku.tv/v/*
 // @updateURL    https://raw.githubusercontent.com/katzlbt/subtitle-logger/main/SubtitleLogger.js
 // @downloadURL  https://raw.githubusercontent.com/katzlbt/subtitle-logger/main/SubtitleLogger.js
+// @run-at       context-menu
+// @run-at       document-idle
 // @grant        none
 // ==/UserScript==
 
 class SubtitleLogger
-{ 
+{
 constructor()
     {
         this.observer = null;
@@ -31,8 +33,19 @@ constructor()
         
         this.updateContainers = function(){};
         
-        let bottomMargin = '110px';
+        this.bottomMargin = '110px';
         
+        this.detectStreamer();
+        
+        this.updateContainers(); // host specific, find subtitle element and container to add log-text
+        
+        this.createLogContainer();        
+        
+        this.recreateObserver();
+    }
+    
+detectStreamer() // create this.updateContainers() to find subtitle element and container to add log-text
+    {
         if(window.location.host == "wetv.vip") // wetv.vip/en player
         {
             this.updateContainers = () =>
@@ -40,8 +53,10 @@ constructor()
                 this.subtitleDiv = document.querySelector('.text-track');
                 this.subtitleContainer = document.getElementById('internal-player-wrapper');
             }
+            
+            return; // >>>>> RETURN >>>>>
         }
-        else 
+         
         if(window.location.host == "www.youku.tv")
         {
             this.updateContainers = () =>
@@ -49,8 +64,10 @@ constructor()
                 this.subtitleDiv = document.getElementById('subtitle');
                 this.subtitleContainer = document.querySelector('.play-top-container-new');
             }
+            
+            return; // >>>>> RETURN >>>>>
         }
-        else 
+         
         if(window.location.host == "www.viki.com")
         {
             this.updateContainers = () =>
@@ -59,14 +76,18 @@ constructor()
                 this.subtitleContainer = document.getElementById('vmplayer_id');
                 //subtitleContainer = document.querySelector('.video-player');
             }
-            bottomMargin = '160px';
+            
+            this.bottomMargin = '160px';
             this.watchViki();
+            
+            return; // >>>>> RETURN >>>>>
         }
-        else
-            alert('The website did not match: ' + window.location.host);
         
-        this.updateContainers();
-        
+        alert('The website did not match: ' + window.location.host);
+    }
+    
+createLogContainer() // creates this.logContainer if needed
+    {
         if (!this.subtitleDiv) {
             console.error('The target subtitle element was not found.');
             return;
@@ -93,7 +114,7 @@ constructor()
             //logContainer.style.pointerEvents = 'none'; // Makes it click-through, so it doesn't interfere with player controls
     
             // 3. SET THE DESIRED CORNER (e.g., Bottom Left)
-            logContainer.style.bottom = bottomMargin; // past player controls from the bottom edge
+            logContainer.style.bottom = this.bottomMargin; // past player controls from the bottom edge
             logContainer.style.left = '4px';   // margin from the left edge
             
             // If you wanted Top Left, you would use:
@@ -109,12 +130,9 @@ constructor()
             style.innerHTML = "#subtitle-log::-webkit-scrollbar { display: none; }";
             document.head.appendChild(style);
         }
-        
-        
-        this.createObserver();
     }
     
-createObserver()
+recreateObserver() // recreates the mutation observer and moves log-text if something changed
     {
         if(this.observer)
             this.observer.disconnect();
@@ -183,7 +201,7 @@ watchViki() // viki removes our container each episode!
             var subtitleContainer = document.getElementById('vmplayer_id');
             if(subtitleContainer)
             {
-                this.createObserver();
+                this.recreateObserver();
             }
         }
         
