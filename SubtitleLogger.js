@@ -7,7 +7,7 @@
 // ==UserScript==
 // @name         Subtitle Logger
 // @namespace    http://schlaraffenland.de/
-// @version      1.1
+// @version      1.11
 // @description  Log subtitles on a web stream-player to read them slowly at your own pace, especially if they appear too short to read. Currently this works for the WeTV, Viki and Youku player.
 // @author       Cat of all Trades
 // @match        https://www.viki.com/videos/*
@@ -83,6 +83,17 @@ detectStreamer() // create this.updateContainers() to find subtitle element and 
             return; // >>>>> RETURN >>>>>
         }
         
+        /* crunchyroll uses SubtitlesOctopus, which actually does things with a JS port of libass to display .ass files
+           this is C++ code as wasm to generate images (Oh god! I never imagined something like that would exist! 
+           10000 lines of code in addition to wasm, all drawing capabilities of canvas unused and (re)implemented)
+           https://github.com/libass/JavascriptSubtitlesOctopus https://github.com/libass/libass
+           
+           ask Gemini for advanced enlightening insights (WOW!): 
+            1. "how does Javascript SubtitlesOctopus work, it seems not to use any draw method"
+            2. "it looks like there is no way to intercept subtitles and display them in a log for reading them slowly when SubtitlesOctopus is used"
+            
+            Sometimes normal (non .ass) subtitles are displayed in document.getElementById("vilosVttJs");
+        */
         alert('The website did not match: ' + window.location.host);
     }
     
